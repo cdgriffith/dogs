@@ -1,3 +1,0 @@
-python-digitalocean
-ruamel.yaml
-python-box

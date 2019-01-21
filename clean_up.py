@@ -14,17 +14,6 @@ for key in required_keys:
 
 manager = digitalocean.Manager(token=config.token)
 
-all_snapshots = manager.get_all_snapshots()
-relevant = []
-for snapshot in all_snapshots:
-    if snapshot.name.startswith(config.name):
-        relevant.append(snapshot)
-
-relevant.sort(key=lambda x: int(x.name.split("-")[-1]), reverse=True)
-
-print(f"Keeping the newest {config.get('snapshot_max', 1)} snapshots")
-for snapshot in relevant[config.get('snapshot_max', 1):]:
-    snapshot.destroy()
 
 
 
