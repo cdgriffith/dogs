@@ -47,7 +47,7 @@ new_droplet = digitalocean.Droplet(
     name=config.name,
     size=config.get('size', "s-1vcpu-2gb"),
     image=snap_id,
-    region=config.get('region', "nyc3"),
+    region=config.get('region', "nyc1"),
     ssh_keys=[23913708],
     monitoring=True,
     token=config.token,
@@ -80,12 +80,12 @@ else:
     raise AssertionError('Did not create')
 
 config.droplet_id = new_droplet.id
+config.region = new_droplet.region
+config.size = new_droplet.size_slug
 config.to_yaml(filename="config.yaml")
-
-print("Adding droplet to Firewall")
-firewall = manager.get_firewall(config.firewall_id)
-firewall.add_droplets(config.droplet_id)
 
 print(f"Droplet online: {new_droplet.ip_address}")
 
-
+print("Adding droplet to Firewall")
+firewall = manager.get_firewall(config.firewall_id)
+firewall.add_droplets([new_droplet.id])
