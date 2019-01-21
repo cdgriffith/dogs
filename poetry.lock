@@ -1,4 +1,12 @@
 [[package]]
+category = "dev"
+description = "Python graph (network) package"
+name = "altgraph"
+optional = false
+python-versions = "*"
+version = "0.16.1"
+
+[[package]]
 category = "main"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 name = "appdirs"
@@ -59,6 +67,14 @@ colorama = "*"
 readchar = "*"
 
 [[package]]
+category = "dev"
+description = "Clean single-source support for Python 3 and 2"
+name = "future"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+version = "0.17.1"
+
+[[package]]
 category = "main"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
@@ -76,6 +92,17 @@ version = "1.0"
 
 [[package]]
 category = "dev"
+description = "Mach-O header analysis and editing"
+name = "macholib"
+optional = false
+python-versions = "*"
+version = "1.11"
+
+[package.dependencies]
+altgraph = ">=0.15"
+
+[[package]]
+category = "dev"
 description = "More routines for operating on iterables, beyond itertools"
 name = "more-itertools"
 optional = false
@@ -84,6 +111,17 @@ version = "5.0.0"
 
 [package.dependencies]
 six = ">=1.0.0,<2.0.0"
+
+[[package]]
+category = "dev"
+description = "Python PE parsing module"
+name = "pefile"
+optional = false
+python-versions = "*"
+version = "2018.8.8"
+
+[package.dependencies]
+future = "*"
 
 [[package]]
 category = "dev"
@@ -100,6 +138,31 @@ name = "py"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.7.0"
+
+[[package]]
+category = "dev"
+description = "PyInstaller bundles a Python application and all its dependencies into a single package."
+name = "pyinstaller"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "3.4"
+
+[package.dependencies]
+altgraph = "*"
+macholib = ">=1.8"
+pefile = ">=2017.8.1"
+setuptools = "*"
+
+[[package]]
+category = "dev"
+description = ""
+name = "pypiwin32"
+optional = false
+python-versions = "*"
+version = "223"
+
+[package.dependencies]
+pywin32 = ">=223"
 
 [[package]]
 category = "dev"
@@ -138,6 +201,22 @@ version = "1.14.0"
 [package.dependencies]
 jsonpickle = "*"
 requests = "*"
+
+[[package]]
+category = "dev"
+description = "Python for Window Extensions"
+name = "pywin32"
+optional = false
+python-versions = "*"
+version = "224"
+
+[[package]]
+category = "dev"
+description = ""
+name = "pywin32-ctypes"
+optional = false
+python-versions = "*"
+version = "0.2.0"
 
 [[package]]
 category = "main"
@@ -186,10 +265,11 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4"
 version = "1.24.1"
 
 [metadata]
-content-hash = "0466309efb91505f7de42106e1754b950001eed11f8100c615045b97a31a58ac"
+content-hash = "c30f239cfecc973c29601b189aab05857e46be68224f5906d1cb5fd4eea7fc41"
 python-versions = "^3.7"
 
 [metadata.hashes]
+altgraph = ["d6814989f242b2b43025cba7161fc1b8fb487a62cd49c49245d6fd01c18ac997", "ddf5320017147ba7b810198e0b6619bd7b5563aa034da388cea8546b877f9b0c"]
 appdirs = ["9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92", "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"]
 atomicwrites = ["0312ad34fcad8fac3704d441f7b317e50af620823353ec657a53e981f92920c0", "ec9ae8adaae229e4f8446952d204a3e4b5fdd2d099f9be3aaf556120135fb3ee"]
 attrs = ["10cbf6e27dbce8c30807caf056c8eb50917e0eaafe86347671b57254006c3e69", "ca4be454458f9dec299268d472aaa5a11f67a4ff70093396e1ceae9c76cf4bbb"]
@@ -197,14 +277,21 @@ certifi = ["47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7", "
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 colorama = ["05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d", "f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"]
 cutie = ["5e38711dedc2efec4f62290f30bc9ad4b489de33fe2d84efafb3611971bc4a91", "712712f4ace87d8fe1bd776a3c1fbbe6a9769e51f85abeb911a6916acdec441b"]
+future = ["67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"]
 idna = ["c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407", "ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"]
 jsonpickle = ["8b6212f1155f43ce67fa945efae6d010ed059f3ca5ed377aa070e5903d45b722", "d43ede55b3d9b5524a8e11566ea0b11c9c8109116ef6a509a1b619d2041e7397", "ed4adf0d14564c56023862eabfac211cf01211a20c5271896c8ab6f80c68086c"]
+macholib = ["ac02d29898cf66f27510d8f39e9112ae00590adb4a48ec57b25028d6962b1ae1", "c4180ffc6f909bf8db6cd81cff4b6f601d575568f4d5dee148c830e9851eb9db"]
 more-itertools = ["38a936c0a6d98a38bcc2d03fdaaedaba9f412879461dd2ceff8d37564d6522e4", "c0a5785b1109a6bd7fac76d6837fd1feca158e54e521ccd2ae8bfe393cc9d4fc", "fe7a7cae1ccb57d33952113ff4fa1bc5f879963600ed74918f1236e212ee50b9"]
+pefile = ["4c5b7e2de0c8cb6c504592167acf83115cbbde01fe4a507c16a1422850e86cd6"]
 pluggy = ["8ddc32f03971bfdf900a81961a48ccf2fb677cf7715108f85295c67405798616", "980710797ff6a041e9a73a5787804f848996ecaa6f8a1b1e08224a5894f2074a"]
 py = ["bf92637198836372b520efcba9e020c330123be8ce527e535d185ed4b6f45694", "e76826342cefe3c3d5f7e8ee4316b80d1dd8a300781612ddbc765c17ba25a6c6"]
+pyinstaller = ["a5a6e04a66abfcf8761e89a2ebad937919c6be33a7b8963e1a961b55cb35986b"]
+pypiwin32 = ["67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775", "71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"]
 pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e246cf173c01169b9617fc07264b7b1316e78d7a650055235d6d897bc80d9660"]
 python-box = ["3330f264ef8deb7016a002911d345a99977e2977bf5b4a1a649f63866d3d0e5b", "4bde84c7fa4282fe9ee4e584234571c25c03130bbbfbebe4ae369eced9a8e3e6", "f0f4c36b6209181aa74fa7f14660a1542162178765f30527e092b8fecc64595b"]
 python-digitalocean = ["9e38295bce257310ac4565538d1cda4169a0a7dafd43e8259db32f2378873eee"]
+pywin32 = ["22e218832a54ed206452c8f3ca9eff07ef327f8e597569a4c2828be5eaa09a77", "32b37abafbfeddb0fe718008d6aada5a71efa2874f068bee1f9e703983dcc49a", "35451edb44162d2f603b5b18bd427bc88fcbc74849eaa7a7e7cfe0f507e5c0c8", "4eda2e1e50faa706ff8226195b84fbcbd542b08c842a9b15e303589f85bfb41c", "5f265d72588806e134c8e1ede8561739071626ea4cc25c12d526aa7b82416ae5", "6852ceac5fdd7a146b570655c37d9eacd520ed1eaeec051ff41c6fc94243d8bf", "6dbc4219fe45ece6a0cc6baafe0105604fdee551b5e876dc475d3955b77190ec", "9bd07746ce7f2198021a9fa187fa80df7b221ec5e4c234ab6f00ea355a3baf99"]
+pywin32-ctypes = ["24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942", "9dc2d991b3479cc2df15930958b674a48a227d5361d413827a4cfd0b5876fc98"]
 readchar = ["3ac34aab28563bc895f73233d5c08b28f951ca190d5850b8d4bec973132a8dca", "ed00b7a49bb12f345319d9fa393f289f03670310ada2beb55e8c3f017c648f1e"]
 requests = ["502a824f31acdacb3a35b6690b5fbf0bc41d63a24a45c4004352b0242707598e", "7bf2a778576d825600030a110f3c0e3e8edc51dfaafe1c146e39a2027784957b"]
 "ruamel.yaml" = ["3858f420b03030f99da44414ff8275a95eb7a6b5613764dd520398fb63951822", "47982ea36529d971c453105ead01788161326bb5349d2aea900da6c0e5f628b5", "527b7978560bc79b5f71b08d8db1ab16d367a08bdf1c2790b1ffb2fac94e46ae", "65c96f9e0a8117be90cd8e23fc4e1d2c94fa410f4364bf70a97aa3cc4e4f4769", "7a1ab9228c48f4741b5d07961e99e898e88afc040343b31b75e1dc1b3f8cee7c", "87c60bd6b282f41a0403df5d59ec1fb1876311e84f5609ada47f17f64406e4d0", "91f93c1938867551e554ea295ef91f84720a68b711d37b9f7d442fd3903082da", "9523308cd0b071f0f8b631ec4f310eb58b3e2b4adbd14a2661783e2c5e8e1fdc", "97cfa9bca4980aa9a77788fe9fbed178bcf5556dd2e917f52fda70ce7bb38a95", "a21e26cf0143d22d9743d23b5531f66385aaf3fb54641782b20c6139239a8a93", "a5167a1b098c86d1b1c9f0d73b7c65e70876d54a11fb1ada4586ba557d2fe165", "a889dc3d6cffb64ca89fac053455b7a778f922b65843263023e998c0fcce001e", "a925760fa1eb8dece3e07ee32485da8d5253cfcd78df25938371a5f5acdaa8a4", "a92fd8e32d824392c0cec96a77e374bb77ceda4b99b1d18c776631e18fc54ffe", "b20e3130b4b5b210365d6760b7d3c87cc9c40e456fa14049f9257bc62cf0d2c9", "cb21f6bad6eade16868efc86fe1bb3e7a3d61137af2bf064dd1e7ed0d629ca9c", "ccb1a0860a602d83898dd71280db142a3502702be3976ffc35eef9eb19585169", "d70eec8bd287798e7905d57d503b1091c8424ba736e287b75f39f1b5a0235d71", "d8a39781c49a892dd0f936d472d850a9aa163205475ad6c90a0f4d0c4d90ee30", "d98b3d421eebf7e10311ab12f41c5b0353e7cae1cc78f51312e24f569d593de0", "e67ea0cf80682e539707fcd8811b7369d8b97b1b48b1d7b16e21cd7f6c2c2e40", "feec97614776442b4dd5029eb16e15f5e582ffc5cf534cba5eefd07062e11eec"]

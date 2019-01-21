@@ -115,7 +115,6 @@ class DOGS:
             firewall.add_droplets([self.droplet.id])
 
     def destroy(self, cleanup=True):
-        print("Shutting down droplet")
         shutdown_info = self.droplet.shutdown()
         shutdown_action = self.droplet.get_action(shutdown_info['action']['id'])
         self.wait_for_action(action=shutdown_action)
@@ -148,8 +147,8 @@ class DOGS:
 
         relevant.sort(key=lambda x: int(x.name.split("-")[-1]), reverse=True)
 
-        print(f"Deleting all but the newest {self.config.get('snapshot_max', 1)} snapshots")
-        for snapshot in relevant[self.config.get('snapshot_max', 1):]:
+        print(f"Deleting all but the newest {self.config.get('snapshot_max', 2)} snapshots")
+        for snapshot in relevant[self.config.get('snapshot_max', 2):]:
             snapshot.destroy()
 
 

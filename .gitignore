@@ -1,1 +1,8 @@
 config.yaml
+build/
+dist/
+*.spec
+
+.idea/
+dogs/__pycache__/
+venv/
