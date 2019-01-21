@@ -155,9 +155,9 @@ class DOGS:
 
 def find_droplets(prefix, config):
     manager = digitalocean.Manager(token=config.token)
-    return [f"{x.name}: {x.id}" for x in manager.get_all_droplets() if x.name.startswith(prefix)]
+    return [f"{x.name} @ {x.ip_address}" for x in manager.get_all_droplets() if x.name.startswith(prefix)]
 
 
 def find_snapshots(prefix, config):
     manager = digitalocean.Manager(token=config.token)
-    return [f"{x.name}: {x.id}" for x in manager.get_all_snapshots() if x.name.startswith(prefix)]
+    return [f"{x.name}" for x in manager.get_all_snapshots() if x.name.startswith(prefix)]
