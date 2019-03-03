@@ -23,46 +23,53 @@ def find_config_file():
         print("Using stored config file")
         return user_config_file
     else:
-        # TODO
         raise Exception("No config file found!")
 
 
-def stats(server, config):
+def stats(server, config, details=False):
     print(f"\nServer: {server}")
     tabbed = "\n    "
     si = config.servers[server]
     print(f"    region: {si.region}")
     print(f"    size: {si.size}")
     print(f"    maximum snapshots: {si.snapshot_max}\n")
-    drops = find_droplets(server, config)
-    if drops:
-        print(" Droplets:")
-        print(f"    {tabbed.join(drops)}")
-    snaps = find_snapshots(server, config)
-    if snaps:
-        print(" Snapshots:")
-        print(f"    {tabbed.join(snaps)}")
-    return True if drops and len(drops) == 1 else False
+    if details:
+        drops = find_droplets(server, config)
+        if drops:
+            print(" Droplets:")
+            print(f"    {tabbed.join(drops)}")
+        snaps = find_snapshots(server, config)
+        if snaps:
+            print(" Snapshots:")
+            print(f"    {tabbed.join(snaps)}")
 
 
 def manage(config, config_file):
-    for i in count():
-        print("\nWhich server do you want to manage?")
-        opts = list(config.servers) + ['Exit']
-        selection = cutie.select(options=opts)
-        if selection == len(opts) - 1:
-            break
-        server_name = list(config.servers)[selection]
-        online = stats(server_name, config)
+    server_continue = False
+    server_online = False
+    for _ in count():
+        if not server_continue:
+            print("\nWhich server do you want to manage?")
+            opts = list(config.servers) + ['Exit']
+            selection = cutie.select(options=opts)
+            if selection == len(opts) - 1:
+                break
+            server_name = list(config.servers)[selection]
+            stats(server_name, config, details=False)
+            server_online = bool(find_droplets(server_name, config))
+        else:
+            server_name = server_continue
+        server_continue = False
 
         print("\nManage:")
         actions = [
             "Turn On",
             "Shutdown",
+            "View Server Info",
             "Cleanup Old Snapshots",
             "Cancel"
         ]
-        action = actions[cutie.select(actions, selected_index=1 if online else 0)]
+        action = actions[cutie.select(actions, selected_index=1 if server_online else 0)]
         dogs = DOGS(server_name, config_file)
         if action == "Turn On":
             print("\nTurning droplet on\n")
@@ -73,6 +80,10 @@ def manage(config, config_file):
         elif action == "Cleanup Old Snapshots":
             print("\nRemoving old snapshots\n")
             dogs.cleanup()
+        elif action == "View Server Info":
+            stats(server_name, config, details=True)
+            server_continue = server_name
+            continue
 
         print("\nWould you like to:")
         selection = cutie.select(["Manage more", "Exit"], selected_index=1)

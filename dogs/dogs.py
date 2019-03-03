@@ -30,9 +30,6 @@ class DOGS:
 
     def create_from_snapshot(self, snapshot):
         my_droplets = self.manager.get_all_droplets()
-        if self.config.get('droplet_id'):
-            raise AssertionError('Config droplet ID set, should be empty,'
-                                 ' make sure droplet does not exist and clear config')
         for drop in my_droplets:
             assert drop.name != self.name, "Droplet already exists"
         new_droplet = digitalocean.Droplet(
@@ -40,7 +37,7 @@ class DOGS:
             size=self.config.get('size', "s-1vcpu-2gb"),
             image=snapshot.id,
             region=self.config.get('region', "nyc1"),
-            ssh_keys=[23913708],
+            ssh_keys=[int(self.config.get('ssh_key'))],
             monitoring=True,
             token=self.token,
             tags=[self.name]
@@ -87,18 +84,6 @@ class DOGS:
         else:
             raise AssertionError(f'Could not {action.type}')
 
-    def save_config(self, destroy=False):
-        # TODO broken
-        # config = Box.from_yaml(filename=self.config_file)
-        # if destroy:
-        #     config.servers[self.server_name].ip = None
-        #     config.servers[self.server_name].droplet_id = None
-        # else:
-        #     config.servers[self.server_name].ip = self.droplet.ip_address
-        #     config.servers[self.server_name].droplet_id = self.droplet.id
-        # config.servers[self.server_name].to_yaml(filename="config.yaml")
-        pass
-
     def create(self):
         snapshot = self.find_newest_snapshot()
         if not snapshot:
@@ -107,7 +92,6 @@ class DOGS:
         self.wait_for_action(action_name='create')
         self.droplet.load()
         print(f"Droplet online: {self.droplet.ip_address}")
-        self.save_config()
 
         if self.config.firewall_id:
             print("Adding droplet to Firewall")
@@ -131,7 +115,6 @@ class DOGS:
             firewall.remove_droplets([self.droplet.id])
 
         self.droplet.destroy()
-        self.save_config(destroy=True)
 
         print('Droplet destroyed')
 

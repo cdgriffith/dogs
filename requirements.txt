@@ -1,0 +1,7 @@
+python-digitalocean
+cutie
+appdirs
+python-box
+ruamel.yaml
+pyinstaller
+pywin32
