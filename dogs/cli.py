@@ -46,7 +46,6 @@ def stats(server, config, details=False):
 
 def manage(config, config_file):
     server_continue = False
-    server_online = False
     for _ in count():
         if not server_continue:
             print("\nWhich server do you want to manage?")
@@ -56,12 +55,16 @@ def manage(config, config_file):
                 break
             server_name = list(config.servers)[selection]
             stats(server_name, config, details=False)
-            server_online = bool(find_droplets(server_name, config))
         else:
             server_name = server_continue
         server_continue = False
 
-        print("\nManage:")
+        dogs = DOGS(server_name, config_file)
+        if dogs.droplet:
+            print(f"Running: {dogs.droplet.ip_address}")
+        else:
+            print("Currently not running")
+
         actions = [
             "Turn On",
             "Shutdown",
@@ -69,8 +72,9 @@ def manage(config, config_file):
             "Cleanup Old Snapshots",
             "Cancel"
         ]
-        action = actions[cutie.select(actions, selected_index=1 if server_online else 0)]
-        dogs = DOGS(server_name, config_file)
+        print("\nManage:")
+        action = actions[cutie.select(actions, selected_index=1 if dogs.droplet else 0)]
+
         if action == "Turn On":
             print("\nTurning droplet on\n")
             dogs.create()
