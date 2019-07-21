@@ -4,5 +4,9 @@
 from subprocess import run
 
 
-def main():
+def build():
     run("pyinstaller -F dogs/__main__.py -n dogs")
+
+
+if __name__ == '__main__':
+    build()
