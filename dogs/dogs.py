@@ -15,7 +15,7 @@ class DOGS:
         cfg = Box.from_yaml(filename=config_file)
         self.config_file = config_file
         self.token = cfg.token
-        self.config = cfg.servers[server_name]
+        self.config = next((s for s in cfg.servers if s.name == server_name), None)
         self.name = server_name
         self.manager = digitalocean.Manager(token=self.token)
         self.droplet = None
@@ -30,6 +30,15 @@ class DOGS:
 
     def create_from_snapshot(self, snapshot):
         my_droplets = self.manager.get_all_droplets()
+        keys = self.manager.get_all_sshkeys()
+
+        if isinstance(self.config.startup_sh, list):
+            user_data = f"""
+                #cloud-config
+                runcmd:
+                """
+            user_data += '\n - '.join(list(self.config.startup_sh))
+
         for drop in my_droplets:
             assert drop.name != self.name, "Droplet already exists"
         new_droplet = digitalocean.Droplet(
@@ -37,7 +46,8 @@ class DOGS:
             size=self.config.get('size', "s-1vcpu-2gb"),
             image=snapshot.id,
             region=self.config.get('region', "nyc1"),
-            ssh_keys=[int(self.config.get('ssh_key'))],
+            ssh_keys=keys,
+            user_data=user_data or None,
             monitoring=True,
             token=self.token,
             tags=[self.name]
@@ -99,24 +109,24 @@ class DOGS:
             firewall.add_droplets([self.droplet.id])
 
     def destroy(self, cleanup=True):
-        shutdown_info = self.droplet.shutdown()
-        shutdown_action = self.droplet.get_action(shutdown_info['action']['id'])
-        self.wait_for_action(action=shutdown_action)
+        if self.config.shutdown_before_destroy:
+            print(f"Shutting down droplet: ${self.name}")
+            shutdown_info = self.droplet.shutdown()
+            shutdown_action = self.droplet.get_action(shutdown_info['action']['id'])
+            self.wait_for_action(action=shutdown_action)
+            print('Droplet shut down.')
+        else:
+            print(f"NOT shutting down droplet '${self.name}' before snapshot")
 
         snap_name = f"{self.name}-{int(time.time())}"
         print(f"Creating snapshot: {snap_name}")
         snap_info = self.droplet.take_snapshot(snap_name)
         snap_action = self.droplet.get_action(snap_info['action']['id'])
         self.wait_for_action(action=snap_action)
+        print('Snapshot created successfully.')
 
-        if self.config.firewall_id:
-            print("Removing from firewall")
-            firewall = self.manager.get_firewall(self.config.firewall_id)
-            firewall.remove_droplets([self.droplet.id])
-
+        print('Destroying droplet!')
         self.droplet.destroy()
-
-        print('Droplet destroyed')
 
         if cleanup:
             self.cleanup()
@@ -133,7 +143,6 @@ class DOGS:
         print(f"Deleting all but the newest {self.config.get('snapshot_max', 2)} snapshots")
         for snapshot in relevant[self.config.get('snapshot_max', 2):]:
             snapshot.destroy()
-
 
 def find_droplets(prefix, config):
     manager = digitalocean.Manager(token=config.token)

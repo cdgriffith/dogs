@@ -4,5 +4,6 @@ dist/
 *.spec
 
 .idea/
-dogs/__pycache__/
-venv/
+__pycache__
+.venv
+.vscode

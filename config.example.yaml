@@ -1,0 +1,12 @@
+token: <your 64 character hex string>
+servers:
+  - name: my-dogs-server
+    ssh_key: <8 digits from end of ssh public cert>
+    region: nyc1 # A full list of regions is available through the API
+    size: s-1vcpu-2gb # A full list of sizes is available through the API
+    firewall_id: <unique hex string separated by dashes>
+    snapshot_max: 2 # The number of snapshots to keep stored, extra's will be deleted
+    shutdown_before_destroy: true # Should the server be powered-down before it's destroyed?
+    startup_sh: # Shell-commands to be run at startup
+      - cd /server
+      - docker-compose up -d

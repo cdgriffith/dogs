@@ -27,37 +27,44 @@ def find_config_file():
 
 
 def stats(server, config, details=False):
-    print(f"\nServer: {server}")
-    tabbed = "\n    "
     si = config.servers[server]
+    server_name = si.name
+    tabbed = "\n    "
+    print(f"\nServer: {server_name}")
     print(f"    region: {si.region}")
     print(f"    size: {si.size}")
     print(f"    maximum snapshots: {si.snapshot_max}\n")
     if details:
-        drops = find_droplets(server, config)
+        drops = find_droplets(server_name, config)
         if drops:
             print(" Droplets:")
             print(f"    {tabbed.join(drops)}")
-        snaps = find_snapshots(server, config)
+        snaps = find_snapshots(server_name, config)
         if snaps:
             print(" Snapshots:")
             print(f"    {tabbed.join(snaps)}")
 
 
 def manage(config, config_file):
+    """
+    Allows the user to manage a server, by either turning it on, shutting it down,
+    viewing its info, or cleaning up old snapshots. The user can then choose to
+    manage more or exit.
+    """
     server_continue = False
     for _ in count():
         if not server_continue:
             print("\nWhich server do you want to manage?")
-            opts = list(config.servers) + ['Exit']
+            opts = [s.name for s in config.servers] + ['Exit']
             selection = cutie.select(options=opts)
             if selection == len(opts) - 1:
                 break
-            server_name = list(config.servers)[selection]
-            stats(server_name, config, details=False)
+            server_index = selection
+            stats(server_index, config, details=False)
         else:
-            server_name = server_continue
+            server_index = server_continue
         server_continue = False
+        server_name = config.servers[server_index].name
 
         dogs = DOGS(server_name, config_file)
         if dogs.droplet:
@@ -65,15 +72,19 @@ def manage(config, config_file):
         else:
             print("Currently not running")
 
+        # Actions
         actions = [
-            "Turn On",
-            "Shutdown",
             "View Server Info",
             "Cleanup Old Snapshots",
             "Cancel"
         ]
+        if dogs.droplet:
+            actions.insert(0, "Shutdown")
+        else:
+            actions.insert(0, "Turn On")
+
         print("\nManage:")
-        action = actions[cutie.select(actions, selected_index=1 if dogs.droplet else 0)]
+        action = actions[cutie.select(actions, selected_index=0)]
 
         if action == "Turn On":
             print("\nTurning droplet on\n")
@@ -85,8 +96,8 @@ def manage(config, config_file):
             print("\nRemoving old snapshots\n")
             dogs.cleanup()
         elif action == "View Server Info":
-            stats(server_name, config, details=True)
-            server_continue = server_name
+            stats(server_index, config, details=True)
+            server_continue = server_index
             continue
 
         print("\nWould you like to:")

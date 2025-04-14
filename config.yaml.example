@@ -1,9 +1,0 @@
-token: SuperSecretSauce
-snapshot_max: 1
-servers:
-  - name: ubuntu-1804
-    region: nyc3
-    size: s-1vcpu-2gb
-    firewall_id: UUID
-    snapshot_max: 2
-    ssh_key: UUID
