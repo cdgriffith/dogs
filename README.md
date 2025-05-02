@@ -1,3 +1,7 @@
+# PROJECT IS ARCHIVED
+
+Please see the fork at [https://github.com/OneHoopyFrood/dogs](https://github.com/OneHoopyFrood/dogs) for updates. 
+
 # DOGS - Digital Ocean Gaming Services 
 
 Run short lived servers and save them as snapshots when done to save on $$$. 
